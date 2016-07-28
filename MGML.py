@@ -38,12 +38,18 @@ forest = forest.fit(train_array[0::,2::],train_array[0::,1])
 
 output = forest.predict(test_array[0::,2::])
 
-correct = 0
-for result, answer in zip(output, test_answers):
-    if result == answer:
-        correct += 1
+# check result against known answers
 
-print "test accuracy:", (float(correct) / float(len(output)))
+correct = 0
+incorrect = 0
+for result, answer in zip(output, test_answers):
+    if result == "1" or answer == "1": 
+        if answer == result:
+            correct += 1
+        else:
+            incorrect += 1
+
+print "test accuracy:", correct, incorrect, (float(correct) / float(correct + incorrect))
     
     
     
