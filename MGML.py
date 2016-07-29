@@ -13,12 +13,20 @@
 from modules import prepare_data 
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
+import argparse
 
 # import data as numpy arrays
 
-train_file = open("./data/elys_spist.train", "rb")
-test_file = open("./data/elys_spist.test", "rb")
+def parse_options():
+    parser = argparse.ArgumentParser("MGML MetaGenome Machine Learning")
 
+    parser.add_argument("-f", "--genome_files", type = str,
+            nargs = "?", help = "genomes in fasta format to train data with")
+
+    args = parser.parse_args()
+
+def MGMT():
+    options = parse_options()
 
 def create_numpy_array(data_file):
     test_answers = []
@@ -29,6 +37,10 @@ def create_numpy_array(data_file):
         test_answers.append(cols[1])
         data.append(cols)
     return np.array(data), test_answers
+
+
+if __name__ == "__main__":
+    MGMT()
 
 train_array = create_numpy_array(train_file)[0]
 test_array, test_answers = create_numpy_array(test_file)
