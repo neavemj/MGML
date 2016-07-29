@@ -1,10 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 28 10:48:46 2016
+#!/usr/bin/env python
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# Written (W) 2016 Matthew J. Neave
+#
+# MGML wrapper script to coordinate data collection and binning
 
-@author: nea040
-"""
 
+from modules import prepare_data 
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 
@@ -12,6 +18,7 @@ import numpy as np
 
 train_file = open("./data/elys_spist.train", "rb")
 test_file = open("./data/elys_spist.test", "rb")
+
 
 def create_numpy_array(data_file):
     test_answers = []
