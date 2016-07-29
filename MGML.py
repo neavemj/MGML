@@ -10,8 +10,8 @@ import numpy as np
 
 # import data as numpy arrays
 
-train_file = open("./data/MGML_train.txt", "rb")
-test_file = open("./data/MGML_test.txt", "rb")
+train_file = open("./data/elys_spist.train", "rb")
+test_file = open("./data/elys_spist.test", "rb")
 
 def create_numpy_array(data_file):
     test_answers = []
@@ -32,18 +32,19 @@ forest = RandomForestClassifier(n_estimators = 100)
 
 # fit training data
 
-#print train_array[0::,2::]
+#print test_array[0::,3:4]
 
-forest = forest.fit(train_array[0::,2::],train_array[0::,1])
+forest = forest.fit(train_array[0::,100::],train_array[0::,1])
 
-output = forest.predict(test_array[0::,2::])
+output = forest.predict(test_array[0::,100::])
+#output = forest.predict_proba(test_array[0::,100::])
 
 # check result against known answers
 
 correct = 0
 incorrect = 0
 for result, answer in zip(output, test_answers):
-    if result == "1" or answer == "1": 
+#    if result == "1" or answer == "1": 
         if answer == result:
             correct += 1
         else:
