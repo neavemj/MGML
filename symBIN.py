@@ -21,7 +21,7 @@ def parse_options():
     parser = argparse.ArgumentParser("symBIN Symbiotic Genome Binning with Machine Learning")
 
     parser.add_argument("-f", "--genome_files", type=str, required=True,
-            nargs="?", help="genomes in fasta format to train data with")
+            nargs="+", help="genomes in fasta format to train data with")
 
     args = parser.parse_args()
     return args
@@ -29,8 +29,11 @@ def parse_options():
 def symBIN():
     args = parse_options()
     
-    # nucleotide_chunk_list = process_fasta(args.genome_files)
-    # 
+    for fl in args.genome_files:
+        name = fl.split(".")[0]        
+        print prepare_data.parse_clean_fasta(fl, 1000).next()
+        break
+     
 
 def create_numpy_array(data_file):
     test_answers = []
@@ -46,36 +49,36 @@ def create_numpy_array(data_file):
 if __name__ == "__main__":
     symBIN()
 
-train_array = create_numpy_array(train_file)[0]
-test_array, test_answers = create_numpy_array(test_file)
-
-# create random forest object
-
-forest = RandomForestClassifier(n_estimators = 100)
-
-# fit training data
-
-#print test_array[0::,3:4]
-
-forest = forest.fit(train_array[0::,100::],train_array[0::,1])
-
-output = forest.predict(test_array[0::,100::])
-#output = forest.predict_proba(test_array[0::,100::])
-
-# check result against known answers
-
-correct = 0
-incorrect = 0
-for result, answer in zip(output, test_answers):
-#    if result == "1" or answer == "1": 
-        if answer == result:
-            correct += 1
-        else:
-            incorrect += 1
-
-print "test accuracy:", correct, incorrect, (float(correct) / float(correct + incorrect))
-    
-    
+#train_array = create_numpy_array(train_file)[0]
+#test_array, test_answers = create_numpy_array(test_file)
+#
+## create random forest object
+#
+#forest = RandomForestClassifier(n_estimators = 100)
+#
+## fit training data
+#
+##print test_array[0::,3:4]
+#
+#forest = forest.fit(train_array[0::,100::],train_array[0::,1])
+#
+#output = forest.predict(test_array[0::,100::])
+##output = forest.predict_proba(test_array[0::,100::])
+#
+## check result against known answers
+#
+#correct = 0
+#incorrect = 0
+#for result, answer in zip(output, test_answers):
+##    if result == "1" or answer == "1": 
+#        if answer == result:
+#            correct += 1
+#        else:
+#            incorrect += 1
+#
+#print "test accuracy:", correct, incorrect, (float(correct) / float(correct + incorrect))
+#    
+#    
     
     
     
