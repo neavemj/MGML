@@ -34,6 +34,7 @@ def generate_data(fl, genome_num, chunk_size, kmer_size):
     cuts genome into "chunk_size" for these calculations
     returns a numpy array with this information
     """
+
     # first calc all possible kmers for a given kmer_size 
     # important to do this here so that the list order stays the same
     possible_kmers = ["".join(kmer) for kmer in product(("G", "C", "T", "A"), repeat=kmer_size)] 

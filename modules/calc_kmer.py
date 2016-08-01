@@ -5,7 +5,7 @@ def calc_kmer(sequence, kmer_order, kmer_size):
     """
     calculate kmer distribution for a given kmer size
     returns list of kmer abundances following the order given in kmer_order
-    this ensures that order is maintained for different sequences
+    this ensures that the order is maintained for different sequences
     """
     from collections import defaultdict
     window = 0
