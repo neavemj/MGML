@@ -15,32 +15,36 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
         
         # get info from sequence
         while True:
-            header = line.strip()
+            header = line.strip().split(" ")[0].replace("|", "_") # this must be header because of startswith(">") break above
             seq = []
             line = f.readline()
-            while True:
-                if line.startswith(">"):
+            while line: # will stop running if no line present
+                if line.startswith(">"): # that would mean no sequence in previous header
                     break
-                seq.append(line.strip())
+                seq.append(line.strip()) # appending all sequence if over multiple lines
                 line = f.readline()
             
-            whole_seq = "".join(seq)
+                whole_seq = "".join(seq) # join list of sequence together if over multiple lines
             
-            if len(whole_seq) > chunk_length:
+            if not line:    # finished reading fasta file
+                print "finished fasta"
+                return
+            
+            if len(whole_seq) > chunk_length:   # want to break large sequences into chunks
                 window = 0
                 count = 0
                 chunk_list = []
                 while True:
                     seq_chunk = whole_seq[window: window + chunk_length]
-                    new_name = header + "_chunk_" + str(count)
+                    new_name = header + "chunk_" + str(count)
                     chunk_list.append((new_name, seq_chunk))
                     window += chunk_length
                     count += 1
                     if (window + chunk_length) > len(whole_seq):
                         yield chunk_list
-            
+                        break
+                
             else:           # seq too small to be included in calculations
-                return
+                continue
+                
             
-            if not line:    # finished reading fasta file
-                return
