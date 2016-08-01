@@ -31,8 +31,7 @@ def symBIN():
     
     for fl in args.genome_files:
         name = fl.split(".")[0]        
-        print prepare_data.parse_clean_fasta(fl, 1000).next()
-        break
+        iter_data =  prepare_data.parse_clean_fasta(fl, 1000)
      
 
 def create_numpy_array(data_file):
