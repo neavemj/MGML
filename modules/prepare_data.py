@@ -21,14 +21,13 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
             while line: # will stop running if no line present
                 if line.startswith(">"): # again must be header line
                     break
-                
                 whole_seq += line.strip()
                 line = f.readline()
             
             if not line:    # finished reading fasta file
                 return
             
-            if len(whole_seq) > chunk_length:   # want to break large sequences into chunks
+            if len(whole_seq) > chunk_length:   # break large sequences into chunks
                 window = 0
                 count = 0
                 chunk_list = []
@@ -41,8 +40,3 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
                     if (window + chunk_length) > len(whole_seq):
                         yield chunk_list
                         break
-                
-            else:           # seq too small to be included in calculations
-                continue
-                
-            

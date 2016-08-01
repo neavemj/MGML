@@ -22,13 +22,15 @@ import argparse
 def parse_options():
     parser = argparse.ArgumentParser("symBIN Symbiotic Genome Binning with Machine Learning")
 
-    parser.add_argument("-f", "--genome_files", type=str, required=True,
+    parser.add_argument("-r", "--reference_genomes", type=str, required=True,
             nargs="+", help="genomes in fasta format to train data with")
+    parser.add_argument("-c", "--chunk_size", type=int, required=False,
+            default=1000, help="split genome into n-size chunks for learning")
 
     args = parser.parse_args()
     return args
 
-def generate_data(fl, genome_num, chunk_size, kmer_size):
+def generate_data(fl, genome_num, chunk_size=1000, kmer_size=4):
     """
     go through genome in fasta format and extract gc content, kmer freqs
     cuts genome into "chunk_size" for these calculations
@@ -57,12 +59,13 @@ def symBIN():
     # loop through each genome and calculate required data
     genome_num = 0
     array_list = []
-    for genome in args.genome_files:
-        tmp_array = generate_data(genome, genome_num, 1000, 4)
+    for genome in args.reference_genomes:
+        tmp_array = generate_data(genome, genome_num, chunk_size=1000, kmer_size=4)
         genome_num += 1
         array_list.append(tmp_array)
     genomes_array = np.concatenate(array_list, axis=0)
     print genomes_array
+    print genomes_array.shape
 
 if __name__ == "__main__":
     symBIN()
