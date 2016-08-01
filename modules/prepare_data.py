@@ -27,7 +27,6 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
                 whole_seq = "".join(seq) # join list of sequence together if over multiple lines
             
             if not line:    # finished reading fasta file
-                print "finished fasta"
                 return
             
             if len(whole_seq) > chunk_length:   # want to break large sequences into chunks

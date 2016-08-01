@@ -11,6 +11,8 @@
 
 
 from modules import prepare_data 
+from modules.calc_gc import calc_gc
+from modules.calc_kmer import calc_kmer
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import argparse
@@ -26,24 +28,31 @@ def parse_options():
     args = parser.parse_args()
     return args
 
+def generate_data(fl, genome_num, chunk_size):
+    """
+    go through genome in fasta format and extract gc content, kmer freqs
+    cuts genome into "chunk_size" for these calculations
+    returns a numpy array with this information
+    """
+    fl_list = []
+    fl_chunk_generator =  prepare_data.parse_clean_fasta(fl, chunk_size)
+    for fl_chunk_tuples in fl_chunk_generator:
+        for fl_chunk in fl_chunk_tuples:
+            seq_name = fl_chunk[0]
+            seq = fl_chunk[1]
+            gc_content = calc_gc(seq) 
+            fl_list.append([seq_name, genome_num, gc_content])
+    return np.array(fl_list)
+
+
 def symBIN():
     args = parse_options()
-    
-    for fl in args.genome_files:
-        name = fl.split(".")[0]        
-        iter_data =  prepare_data.parse_clean_fasta(fl, 1000)
-     
-
-def create_numpy_array(data_file):
-    test_answers = []
-    data = []
-    for line in data_file:
-        line = line.strip()
-        cols = line.split("\t")
-        test_answers.append(cols[1])
-        data.append(cols)
-    return np.array(data), test_answers
-
+   
+    # loop through each genome and calculate required data
+    genome_num = 0
+    for genome in args.genome_files:
+        print  generate_data(genome, genome_num, 1000)
+        genome_num += 1
 
 if __name__ == "__main__":
     symBIN()
