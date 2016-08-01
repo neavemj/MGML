@@ -13,11 +13,11 @@
 from modules import prepare_data 
 from modules.calc_gc import calc_gc
 from modules.calc_kmer import calc_kmer
+from itertools import product
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import argparse
 
-# import data as numpy arrays
 
 def parse_options():
     parser = argparse.ArgumentParser("symBIN Symbiotic Genome Binning with Machine Learning")
@@ -28,20 +28,25 @@ def parse_options():
     args = parser.parse_args()
     return args
 
-def generate_data(fl, genome_num, chunk_size):
+def generate_data(fl, genome_num, chunk_size, kmer_size):
     """
     go through genome in fasta format and extract gc content, kmer freqs
     cuts genome into "chunk_size" for these calculations
     returns a numpy array with this information
     """
+    # first calc all possible kmers for a given kmer_size 
+    # important to do this here so that the list order stays the same
+    possible_kmers = ["".join(kmer) for kmer in product(("G", "C", "T", "A"), repeat=kmer_size)] 
     fl_list = []
     fl_chunk_generator =  prepare_data.parse_clean_fasta(fl, chunk_size)
+
     for fl_chunk_tuples in fl_chunk_generator:
         for fl_chunk in fl_chunk_tuples:
             seq_name = fl_chunk[0]
             seq = fl_chunk[1]
             gc_content = calc_gc(seq) 
-            fl_list.append([seq_name, genome_num, gc_content])
+            kmer_list = calc_kmer(seq, possible_kmers, kmer_size)
+            fl_list.append([seq_name, genome_num, gc_content] + kmer_list)
     return np.array(fl_list)
 
 
@@ -50,9 +55,13 @@ def symBIN():
    
     # loop through each genome and calculate required data
     genome_num = 0
+    array_list = []
     for genome in args.genome_files:
-        print  generate_data(genome, genome_num, 1000)
+        tmp_array = generate_data(genome, genome_num, 1000, 4)
         genome_num += 1
+        array_list.append(tmp_array)
+    genomes_array = np.concatenate(array_list, axis=0)
+    print genomes_array
 
 if __name__ == "__main__":
     symBIN()

@@ -25,7 +25,8 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
                 line = f.readline()
             
                 whole_seq = "".join(seq) # join list of sequence together if over multiple lines
-            
+                whole_seq = whole_seq.upper() # make sure all upper case
+
             if not line:    # finished reading fasta file
                 return
             
