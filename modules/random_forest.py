@@ -15,4 +15,4 @@ def random_forest(train_array, test_array, n_est, max_depth, threads):
     # predict accuracy against test data
     output = forest.predict(test_array[0::,2::])
 
-    return output
+    return forest, output

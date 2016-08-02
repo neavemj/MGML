@@ -17,3 +17,9 @@ def check_inputs(args, parser):
         parser.print_help()
         print "error: test_size is given as decimal. Needs to be between 0 and 1."
         sys.exit()
+
+    # should only be on unclassified metagenome input
+    if len(args.unclassified_metagenome) != 1:
+        parser.print_help()
+        print "error: a single unclassified metagenome should be supplied."
+        sys.exit()

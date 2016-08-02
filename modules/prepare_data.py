@@ -4,7 +4,7 @@
 import os
 
 def parse_clean_fasta(genome_file_handle, chunk_length):
-
+    
     genome_name = os.path.basename(genome_file_handle).split(".")[0] 
     
     with open(genome_file_handle) as f:

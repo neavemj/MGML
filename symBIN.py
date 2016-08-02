@@ -27,8 +27,10 @@ def parse_options():
 
     parser.add_argument("-r", "--reference_genomes", type=str, required=True,
             nargs="+", help="genomes in fasta format to train data with")
-    parser.add_argument("-a", "--algorithm", type=str, required=False, default="rf",
-            nargs=1, help="machine learning algorithm, should be 'rf' for random \
+    parser.add_argument("-u", "--unclassified_metagenome", type=str, required=True,
+            nargs="+", help="unclassified metagenome assembly for sorting in fasta format")
+    parser.add_argument("-a", "--algorithm", type=str, required=False, default=["rf"],
+            nargs=1, help="machine learning algorithm, should be rf for random \
                     forests,.. Default=rf")
     parser.add_argument("-c", "--chunk_size", type=int, required=False,
             default=1000, help="split genome into n-size chunks for learning.\
@@ -98,11 +100,24 @@ def symBIN():
     
     # train Random Forest classifier
     if args.algorithm[0] == "rf":
-        rf_output = random_forest(ref_train, ref_test, args.n_est, args.max_depth, \
+        rf_model, rf_output = random_forest(ref_train, ref_test, args.n_est, args.max_depth, \
             args.threads)
     
         # check accuracy of training
         check_accuracy(ref_test, rf_output)
+
+    # analyze unknown metagenome using previously trained model
+
+    unknown_data = generate_data(args.unclassified_metagenome[0], "?", args.chunk_size,\
+            args.kmer_size)
+    unknown_predict = rf_model.predict(unknown_data[0::,2::])
+   
+    tmp_output = open("tmp_output", "w")
+    for index, prediction in enumerate(unknown_predict):
+        if prediction == "0":
+            tmp_output.write(unknown_data[index,0] + "\n")
+
+    print "done with analysis"
 
 
 if __name__ == "__main__":
