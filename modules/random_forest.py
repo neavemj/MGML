@@ -1,13 +1,13 @@
 # train random forest classifier using gc content and kmer frequencies
 # Matthew J. Neave
 
-def random_forest(train_array, test_array, n_est):
+def random_forest(train_array, test_array, n_est, max_depth, threads):
 
     from sklearn.ensemble import RandomForestClassifier
-    from sklearn.metrics import accuracy_score
 
     # create random forest object
-    forest = RandomForestClassifier(n_estimators=n_est)
+    forest = RandomForestClassifier(n_estimators=n_est, max_depth=max_depth, \
+            verbose=1, n_jobs=threads)
 
     # fit training data
     forest = forest.fit(train_array[0::,2::],train_array[0::,1])

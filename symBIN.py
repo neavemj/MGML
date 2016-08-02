@@ -11,6 +11,7 @@
 
 
 from modules import prepare_data 
+from modules.check_inputs import check_inputs
 from modules.calc_gc import calc_gc
 from modules.calc_kmer import calc_kmer
 from modules.random_forest import random_forest
@@ -26,9 +27,14 @@ def parse_options():
 
     parser.add_argument("-r", "--reference_genomes", type=str, required=True,
             nargs="+", help="genomes in fasta format to train data with")
+    parser.add_argument("-a", "--algorithm", type=str, required=False, default="rf",
+            nargs=1, help="machine learning algorithm, should be 'rf' for random \
+                    forests,.. Default=rf")
     parser.add_argument("-c", "--chunk_size", type=int, required=False,
             default=1000, help="split genome into n-size chunks for learning.\
                     Default=1000")
+    parser.add_argument("-p", "--threads", type=int, required=False,
+            default=1, help="threads / cores to use for learning. Default=1")
     parser.add_argument("-k", "--kmer_size", type=int, required=False,
             default=4, help="kmer size for creating distribution table. Default=4")
     parser.add_argument("-t", "--test_size", type=float, required=False,
@@ -37,8 +43,13 @@ def parse_options():
     parser.add_argument("-n", "--n_est", type=int, required=False,
             default=100, help="number of estimators for Random Forest model\
                     Default=100")
+    parser.add_argument("-m", "--max_depth", type=int, required=False,
+            default=None, help="Maximum tree depth for Random Forest model\
+                    Default=None")
 
     args = parser.parse_args()
+    
+    check_inputs(args, parser)
     return args
 
 def generate_data(fl, genome_num, chunk_size, kmer_size):
@@ -86,10 +97,12 @@ def symBIN():
     print ref_train.shape, ref_test.shape
     
     # train Random Forest classifier
-    rf_output = random_forest(ref_train, ref_test, args.n_est)
+    if args.algorithm[0] == "rf":
+        rf_output = random_forest(ref_train, ref_test, args.n_est, args.max_depth, \
+            args.threads)
     
-    # check accuracy of training
-    check_accuracy(ref_test, rf_output)
+        # check accuracy of training
+        check_accuracy(ref_test, rf_output)
 
 
 if __name__ == "__main__":
