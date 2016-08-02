@@ -95,36 +95,3 @@ def symBIN():
 if __name__ == "__main__":
     symBIN()
 
-#train_array = create_numpy_array(train_file)[0]
-#test_array, test_answers = create_numpy_array(test_file)
-#
-## create random forest object
-#
-#forest = RandomForestClassifier(n_estimators = 100)
-#
-## fit training data
-#
-##print test_array[0::,3:4]
-#
-#forest = forest.fit(train_array[0::,100::],train_array[0::,1])
-#
-#output = forest.predict(test_array[0::,100::])
-##output = forest.predict_proba(test_array[0::,100::])
-#
-## check result against known answers
-#
-#correct = 0
-#incorrect = 0
-#for result, answer in zip(output, test_answers):
-##    if result == "1" or answer == "1": 
-#        if answer == result:
-#            correct += 1
-#        else:
-#            incorrect += 1
-#
-#print "test accuracy:", correct, incorrect, (float(correct) / float(correct + incorrect))
-#    
-#    
-    
-    
-    

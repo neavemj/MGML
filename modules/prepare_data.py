@@ -1,10 +1,13 @@
 # format fasta file for use with kmer, gc content modules
 # Matthew J. Neave 28.07.16
 
+import os
 
 def parse_clean_fasta(genome_file_handle, chunk_length):
+
+    genome_name = os.path.basename(genome_file_handle).split(".")[0] 
+    
     with open(genome_file_handle) as f:
-        
         # ignore comments, blank lines, etc.
         while True:
             line = f.readline()
@@ -15,7 +18,7 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
         
         # get info from sequence
         while True:
-            header = line.strip().split(" ")[0].replace("|", "_") # this must be header because of startswith(">") break above
+            header = line.strip().split(" ")[0].replace("|", "_") # must be header because of startswith(">") break above
             line = f.readline()
             whole_seq = ""
             while line: # will stop running if no line present
@@ -33,7 +36,7 @@ def parse_clean_fasta(genome_file_handle, chunk_length):
                 chunk_list = []
                 while True:
                     seq_chunk = whole_seq[window: window + chunk_length]
-                    new_name = header + "_chunk_" + str(count)
+                    new_name = header + "_" + genome_name +  "_chunk_" + str(count)
                     chunk_list.append((new_name, seq_chunk))
                     window += chunk_length
                     count += 1
